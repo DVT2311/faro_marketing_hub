@@ -38,7 +38,7 @@ Mở `index.html` bằng trình duyệt (hoặc qua GitHub Pages nếu đã bậ
 | Nhân sự marketing | `ngan`, `tho`, `tram.anh`… | `faro123` |
 | Kế toán | `ketoan` | `faro123` |
 
-> Bản công khai dùng font thay thế. Font thương hiệu (TT Norms Pro Serif, URW DIN) không được đính kèm vì giấy phép không cho phép phân phối trên web; máy nào đã cài sẵn các font này sẽ tự hiển thị đúng.
+> Bản công khai dùng font thay thế miễn phí (Barlow, Barlow Semi Condensed, Bitter – giấy phép SIL Open Font License), đã chỉnh độ đậm để hiển thị gần giống font thương hiệu. Font thương hiệu (TT Norms Pro Serif, URW DIN) không được đính kèm vì giấy phép không cho phép phân phối trên web.
 
 ## Lộ trình
 
