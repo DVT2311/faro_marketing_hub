@@ -22,7 +22,7 @@ Một ứng dụng web dùng được trên máy tính, tablet và điện tho�
 | **Campaign** | Brief, thời gian, Lead, team, mục tiêu; xoá chủ động khi không còn dùng. |
 | **Triển khai** | Giao việc kèm hạn chót, nhân sự xác nhận nhận việc, báo hoàn thành, trưởng nhóm duyệt hoặc trả lại. |
 | **Ngân sách** | PIC của campaign đề xuất → BOD duyệt → PIC ghi nhận từng khoản chi → Kế toán đối soát có xác nhận; BOD bỏ đối soát phải ghi lý do và kế toán được báo để xem lại. |
-| **Partnership** | Theo dõi chương trình hợp tác theo nhãn hàng, thời gian, hạng mục và PIC; PIC cập nhật tình trạng kèm kết quả (ghi chú, link, hình ảnh). |
+| **Partnership** | Theo dõi chương trình hợp tác theo nhãn hàng, thời gian, mục tiêu, chi phí, hạng mục và PIC; hiển thị ngay trên Tổng quan; PIC cập nhật tình trạng kèm kết quả (ghi chú, link, hình ảnh). |
 | **Báo cáo** | Ghi nhận bài đăng theo nền tảng, tổng hợp view và tương tác theo campaign / nhân sự, chốt số liệu tháng, xuất file. |
 | **Tài khoản** | Tạo tài khoản, cấp mật khẩu tạm, bắt đổi mật khẩu lần đầu, khoá tài khoản, tuỳ chỉnh vai trò và quyền. |
 | **Thông báo** | Mỗi người thấy đúng việc cần mình xử lý: việc mới được giao, sắp đến hạn, khoản chờ duyệt, khoản cần đối soát… |

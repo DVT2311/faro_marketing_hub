@@ -62,6 +62,13 @@
 .p-logo{width:46px;height:46px;border-radius:12px;background:var(--cream);color:#2E2926;display:grid;place-items:center;font-family:var(--f-label);font-weight:600;font-size:15px;letter-spacing:.04em;border:1px solid var(--line)}
 .p-title h2{font-size:21px;margin:2px 0 3px}
 .p-note{margin:0;font-size:14px;color:var(--ink2);background:var(--sunk);border-radius:10px;padding:10px 12px}
+.p-meta{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 20px;font-size:14px}
+.p-meta .eyebrow{display:block;margin-bottom:2px}.p-meta b{font-weight:500;color:var(--ink)}.p-meta .num{white-space:nowrap}
+.pcards{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr))}
+.pcard{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;display:grid;gap:10px;align-content:start;min-width:0}
+.pcard h3{font-family:var(--f-head);font-weight:300;font-size:19px;margin:0;line-height:1.25}.pcard h3 .x{color:var(--muted);padding:0 4px}
+.pcard .p-goal{margin:0;font-size:13.5px;color:var(--ink2)}
+.pcard .pc-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:13px;color:var(--muted)}
 .p-items{display:grid}
 .p-item{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:12px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
 .p-item.is-done .mi-title{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--line2)}
@@ -659,9 +666,9 @@ function demoData(){
   {const h=x.accounts.find(a=>a.username==='hai');if(h)h.role='r-lead'}
   const I=(name,pic,status,extra)=>({id:uid(),name,pic,status,...(extra||{})});
   x.partners=[
-    {id:'dp1',brand:'Xưởng gốm Lò Đất',program:'Ly gốm thủ công phiên bản FARO',start:'2026-10-05',end:'2026-11-15',status:'running',note:'Mỗi bên chịu chi phí truyền thông trên kênh của mình. FARO bán ly tại 3 cửa hàng, chia doanh thu 60/40.',items:[I('Chốt mẫu ly & số lượng','Hải','done',{result:'Chốt 2 mẫu ly men tro, 600 chiếc đợt đầu. Giao hàng 25/10.',links:['https://drive.google.com/drive/folders/faro-lodat-mau-ly'],resBy:'Hải',resAt:'12/10/2026 16:20'}),I('Chụp ảnh sản phẩm collab','Phương','doing'),I('Bài công bố collab trên 2 fanpage','Ngân','todo'),I('Setup quầy trưng bày tại quán','Thọ','todo')]},
-    {id:'dp2',brand:'Studio Yoga An Nhiên',program:'Morning Flow & Coffee',start:'2026-11-01',end:'2026-11-30',status:'negotiating',note:'4 buổi yoga sáng cuối tuần tại FARO Thảo Điền, khách được tặng 1 ly cold brew.',items:[I('Gửi proposal & lịch dự kiến','Khánh Tâm','done'),I('Chốt chi phí và quyền lợi hai bên','BOD','doing')]},
-    {id:'dp3',brand:'Tiệm bánh Mây',program:'Combo bánh & cà phê mùa thu',start:'2026-09-01',end:'2026-09-30',status:'done',note:'',items:[I('Thiết kế menu combo','Hải','done'),I('Đào tạo nhân viên quầy','Thọ','done'),I('Báo cáo doanh số combo','Nguyên','done',{result:'Bán 1.284 combo trong tháng 9, vượt 28% mục tiêu.',links:['https://docs.google.com/spreadsheets/d/faro-combo-mua-thu'],resBy:'Nguyên',resAt:'02/10/2026 09:05'})]}];
+    {id:'dp1',brand:'Xưởng gốm Lò Đất',program:'Ly gốm thủ công phiên bản FARO',start:'2026-10-05',end:'2026-11-15',status:'running',goal:'Bán 600 ly collab trong 6 tuần, tăng 15% khách mới tại 3 cửa hàng',cost:18,note:'Mỗi bên chịu chi phí truyền thông trên kênh của mình. FARO bán ly tại 3 cửa hàng, chia doanh thu 60/40.',items:[I('Chốt mẫu ly & số lượng','Hải','done',{result:'Chốt 2 mẫu ly men tro, 600 chiếc đợt đầu. Giao hàng 25/10.',links:['https://drive.google.com/drive/folders/faro-lodat-mau-ly'],resBy:'Hải',resAt:'12/10/2026 16:20'}),I('Chụp ảnh sản phẩm collab','Phương','doing'),I('Bài công bố collab trên 2 fanpage','Ngân','todo'),I('Setup quầy trưng bày tại quán','Thọ','todo')]},
+    {id:'dp2',brand:'Studio Yoga An Nhiên',program:'Morning Flow & Coffee',start:'2026-11-01',end:'2026-11-30',status:'negotiating',goal:'120 khách tham gia 4 buổi, 30% quay lại trong tháng',cost:12,note:'4 buổi yoga sáng cuối tuần tại FARO Thảo Điền, khách được tặng 1 ly cold brew.',items:[I('Gửi proposal & lịch dự kiến','Khánh Tâm','done'),I('Chốt chi phí và quyền lợi hai bên','BOD','doing')]},
+    {id:'dp3',brand:'Tiệm bánh Mây',program:'Combo bánh & cà phê mùa thu',start:'2026-09-01',end:'2026-09-30',status:'done',goal:'1.000 combo bán ra trong tháng 9',cost:8,note:'',items:[I('Thiết kế menu combo','Hải','done'),I('Đào tạo nhân viên quầy','Thọ','done'),I('Báo cáo doanh số combo','Nguyên','done',{result:'Bán 1.284 combo trong tháng 9, vượt 28% mục tiêu.',links:['https://docs.google.com/spreadsheets/d/faro-combo-mua-thu'],resBy:'Nguyên',resAt:'02/10/2026 09:05'})]}];
   return x;
 }
 function arc(m,a){return{month:m,closedAt:'01/'+String(+m.slice(5)+1).padStart(2,'0')+'/2026',closedBy:'BOD',totals:{posts:a[0],views:a[1],eng:a[2],tasks:a[3],done:a[4],ontime:a[5],budget:a[6],spent:a[7],camps:a[8]},byPlatform:{},byStaff:{},byCampaign:{}}}
@@ -1062,7 +1069,20 @@ function vPlan(){
   </section>`:''}
   <section class="card"><div class="card-h"><h2>Lịch chạy campaign</h2><span class="hint">Các campaign chạy song song trong ${monthLabel(cur).toLowerCase()}</span></div>${timeline(cs)}</section>
   <section><div class="card-h" style="margin-bottom:12px"><h2>Campaign trong tháng</h2></div><div class="camps">${cs.map(campCard).join('')}</div></section>
+  ${partnerOverview()}
   <section class="card"><div class="card-h"><h2>Đội ngũ</h2>${peopleLegend(cs)}</div><div class="people">${peopleList(cs)}</div></section>`;
+}
+function partnerOverview(){
+  const b=monthBounds(cur),ps=(D.partners||[]).filter(x=>(x.start||'')<=b.e&&(x.end||'9999')>=b.s).sort((a,c)=>({running:0,negotiating:1,paused:2,done:3}[a.status]-{running:0,negotiating:1,paused:2,done:3}[c.status])||(a.start||'').localeCompare(c.start||''));
+  if(!ps.length)return '';
+  const cost=ps.reduce((a,x)=>a+(+x.cost||0),0);
+  return `<section><div class="card-h" style="margin-bottom:12px"><h2>Partnership trong tháng</h2><div class="row"><span class="hint">${ps.length} chương trình · chi phí ${nf(cost,1)} triệu</span><button class="btn sm" data-goto="partner">Mở Partnership</button></div></div>
+   <div class="pcards">${ps.map(x=>{const its=x.items||[],done=its.filter(i=>i.status==='done').length,[sl,sc]=PST[x.status]||PST.negotiating,left=x.status==='running'?daysLeft(x.end):null;
+     return `<article class="pcard"><div class="row" style="justify-content:space-between;flex-wrap:nowrap;gap:10px"><span class="eyebrow">${fdate(x.start)} → ${fdate(x.end)}${left!==null?(left<0?' · quá hạn':' · còn '+left+' ngày'):''}</span><span class="badge ${sc}">${sl}</span></div>
+      <h3>${esc(x.program||'')}<span class="x">×</span>${esc(x.brand||'')}</h3>
+      ${x.goal?`<p class="p-goal"><span class="eyebrow">Mục tiêu</span> ${esc(x.goal)}</p>`:''}
+      <div class="prog"><div class="meter">${seg(done,'var(--forest)',its.length,'Đã xong','hạng mục')}${rest(done,its.length,'Chưa xong','hạng mục')}</div><span class="num">${done}/${its.length} hạng mục</span></div>
+      <div class="pc-foot"><span>Chi phí <b style="color:var(--ink);font-weight:500" class="num">${x.cost?nf(x.cost,1)+' tr':'—'}</b></span><span>${its.filter(i=>i.status!=='done').map(i=>i.pic).filter((v,k,a)=>v&&a.indexOf(v)===k).slice(0,4).map(n=>av(n)).join('')}</span></div></article>`}).join('')}</div></section>`;
 }
 function timeline(cs){
   const b=monthBounds(cur),N=b.days,dayIdx=d=>Math.round((new Date(d+'T00:00:00')-new Date(b.s+'T00:00:00'))/864e5);
@@ -1221,7 +1241,7 @@ function vPartner(){
   const chip=(k,l,n)=>`<button aria-pressed="${f===k}" data-act="p-filter" data-id="${k}">${l}<b>${n}</b></button>`;
   return `${pageHead('Hợp tác · Collab','Partnership',ed?'<button class="btn primary" data-act="p-new">+ Thêm hợp tác</button>':'<span class="hint" style="max-width:340px">Bạn xem được mọi chương trình và cập nhật kết quả hạng mục mình là PIC. Thêm, sửa, xoá hợp tác do BOD và Trưởng nhóm thực hiện.</span>')}
    <section class="kpis">
-    <div class="kpi"><div class="eyebrow">Đang triển khai</div><div class="v">${cnt('running')}<small>chương trình</small></div><div class="s">${all.length} hợp tác trong danh sách</div></div>
+    <div class="kpi"><div class="eyebrow">Đang triển khai</div><div class="v">${cnt('running')}<small>chương trình</small></div><div class="s">${all.length} hợp tác · tổng chi phí ${nf(all.reduce((a,x)=>a+(+x.cost||0),0),1)} tr</div></div>
     <div class="kpi"><div class="eyebrow">Đang đàm phán</div><div class="v">${cnt('negotiating')}</div><div class="s">${cnt('paused')} tạm dừng · ${cnt('done')} hoàn thành</div></div>
     <div class="kpi"><div class="eyebrow">Hạng mục chưa xong</div><div class="v">${open.length}</div><div class="meter">${seg(items.filter(i=>i.status==='done').length,'var(--forest)',items.length,'Đã xong','hạng mục')}${seg(items.filter(i=>i.status==='doing').length,'var(--sky)',items.length,'Đang làm','hạng mục')}${rest(items.filter(i=>i.status!=='todo').length,items.length,'Chưa làm','hạng mục')}</div><div class="s">${items.filter(i=>i.status==='done').length}/${items.length} hạng mục đã xong</div></div>
     <div class="kpi"><div class="eyebrow">Việc của ${esc(me)}</div><div class="v">${mine.length}</div><div class="s">${mine.length?'hạng mục bạn phụ trách':'Bạn chưa phụ trách hạng mục nào'}</div></div>
@@ -1236,6 +1256,7 @@ function partnerCard(x,ed){
   return `<article class="card partner"><div class="p-head"><span class="p-logo" aria-hidden="true">${esc(ini)}</span><div class="p-title"><div class="eyebrow">${esc(x.brand||'—')}</div><h2>${esc(x.program||'')}</h2>
      <div class="hint num">${fdate(x.start)} → ${fdate(x.end)}${yr?'/'+yr:''}${left!==null?(left<0?` · <span style="color:var(--late)">quá hạn ${-left} ngày</span>`:` · còn ${left} ngày`):''}</div></div><span class="badge ${sc}">${sl}</span></div>
     ${x.note?`<p class="p-note">${esc(x.note)}</p>`:''}
+    <div class="p-meta"><div><span class="eyebrow">Mục tiêu</span>${x.goal?esc(x.goal):'<span class="hint">Chưa đặt mục tiêu</span>'}</div><div><span class="eyebrow">Chi phí</span><b class="num">${x.cost?nf(x.cost,1)+' triệu':'—'}</b></div></div>
     <div class="p-items">${its.length?its.map(i=>{const [il,ic]=PIST[i.status]||PIST.todo,mineI=i.pic===me,canUp=ed||mineI;return `<div class="p-item${i.status==='done'?' is-done':''}"><div class="mi-main"><div class="mi-title">${esc(i.name)}</div>${piResult(x,i)}</div><div class="p-pic">${av(i.pic||'?')}<span>${esc(i.pic||'—')}${mineI?' <span class="hint">(bạn)</span>':''}</span></div>${canUp?`<button class="badge ${ic} p-st" data-act="pi-update" data-id="${x.id}" data-item="${i.id}" title="Cập nhật tình trạng và kết quả">${il} ✎</button>`:`<span class="badge ${ic}">${il}</span>`}</div>`}).join(''):'<p class="hint" style="margin:0">Chưa có hạng mục.</p>'}</div>
     <div class="p-foot"><div class="prog"><div class="meter">${seg(done,'var(--forest)',its.length,'Đã xong','hạng mục')}${rest(done,its.length,'Chưa xong','hạng mục')}</div><span class="num">${done}/${its.length} hạng mục</span></div>
      ${ed?`<div class="row"><button class="btn sm ghost" data-act="p-edit" data-id="${x.id}">Sửa</button>${can('assign')?`<button class="btn sm danger" data-act="p-del" data-id="${x.id}">Xoá</button>`:''}</div>`:''}</div></article>`;
@@ -1247,13 +1268,13 @@ function partnerModal(x){
   openModal(isNew?'Thêm hợp tác':'Sửa hợp tác',
     fld('brand','Nhãn hàng / đối tác',x.brand,'text',0,'required placeholder="VD: Xưởng gốm Lò Đất"')+fld('program','Chương trình',x.program,'text',0,'required placeholder="Tên chương trình collab"')+
     fld('start','Bắt đầu',x.start,'date',0,'required')+fld('end','Kết thúc',x.end,'date',0,'required')+
-    sel('status','Trạng thái',Object.entries(PST).map(([k,v])=>[k,v[0]]),x.status)+fld('note','Ghi chú / thoả thuận chính',x.note,'textarea',1,'placeholder="Quyền lợi, chi phí, cách chia doanh thu… (không bắt buộc)"')+
+    sel('status','Trạng thái',Object.entries(PST).map(([k,v])=>[k,v[0]]),x.status)+fld('cost','Chi phí (triệu)',x.cost||'','number',0,'step="0.1" min="0"')+fld('goal','Mục tiêu',x.goal||'','textarea',1,'rows="2"')+fld('note','Ghi chú / thoả thuận chính',x.note,'textarea',1,'placeholder="Quyền lợi, chi phí, cách chia doanh thu… (không bắt buộc)"')+
     `<div class="field full"><span class="lbl">Hạng mục & PIC</span><div class="pi-list" id="piList">${(x.items.length?x.items:[{}]).map(row).join('')}</div><button type="button" class="btn sm" id="piAdd" style="justify-self:start">+ Thêm hạng mục</button></div>`,
     (v,fd)=>{if(!v.brand.trim()||!v.program.trim())return 'Cần nhập nhãn hàng và tên chương trình.';if(v.end<v.start)return 'Ngày kết thúc phải sau ngày bắt đầu.';
       const ids=fd.getAll('item_id'),ns=fd.getAll('item_name'),ps=fd.getAll('item_pic'),ss=fd.getAll('item_status');
       const old=new Map((x.items||[]).map(i=>[i.id,i]));
       const items=ns.map((n,k)=>({...(old.get(ids[k])||{}),id:ids[k],name:n.trim(),pic:ps[k],status:ss[k]})).filter(i=>i.name);
-      put('partners',x.id,{...x,brand:v.brand.trim(),program:v.program.trim(),start:v.start,end:v.end,status:v.status,note:v.note.trim(),items,updatedBy:me,updatedAt:nowStr(),...(isNew?{createdBy:me,createdAt:nowStr()}:{})});toast(isNew?'Đã thêm hợp tác.':'Đã lưu hợp tác.')});
+      put('partners',x.id,{...x,brand:v.brand.trim(),program:v.program.trim(),start:v.start,end:v.end,status:v.status,goal:v.goal.trim(),cost:+v.cost||0,note:v.note.trim(),items,updatedBy:me,updatedAt:nowStr(),...(isNew?{createdBy:me,createdAt:nowStr()}:{})});toast(isNew?'Đã thêm hợp tác.':'Đã lưu hợp tác.')});
   const list=document.getElementById('piList');
   document.getElementById('piAdd').onclick=()=>{list.insertAdjacentHTML('beforeend',row({}));list.lastElementChild.querySelector('input[name=item_name]').focus()};
   list.addEventListener('click',e=>{const d=e.target.closest('.pi-del');if(!d)return;const r=d.closest('.pi-row');if(list.children.length>1)r.remove();else r.querySelector('input[name=item_name]').value=''});
