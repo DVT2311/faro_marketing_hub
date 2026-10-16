@@ -1,4 +1,4 @@
-<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Semi+Condensed:wght@500;600&family=Bitter:wght@300;400&display=swap&subset=vietnamese" rel="stylesheet"></head><body><title>FARO Coffee Inspiration</title>
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Semi+Condensed:wght@500;600&family=Bitter:wght@300;400&display=swap&subset=vietnamese" rel="stylesheet"></head><body><title>Faro Marketing Hub</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>
 /* Brand fonts (FARO guideline): TT Norms Pro Serif + URW DIN / URW DIN SemiCond — subset Latin + Tiếng Việt */
@@ -908,7 +908,7 @@ let lastKeys=null;
 function updateBell(){
   const list=notifs(),unread=list.filter(n=>n.ts>seenAt()).length,el=document.getElementById('bellCnt');
   el.hidden=!unread;el.textContent=unread>9?'9+':unread;
-  document.title=(unread?`(${unread}) `:'')+'FARO Coffee Inspiration';
+  document.title=(unread?`(${unread}) `:'')+'Faro Marketing Hub';
   const keys=new Set(list.map(n=>n.key));
   if(lastKeys){const fresh=list.filter(n=>!lastKeys.has(n.key)&&n.ts>seenAt()&&n.ts>Date.now()-6e5);if(fresh.length)toast('🔔 '+fresh[0].text+(fresh.length>1?` (+${fresh.length-1})`:''))}
   lastKeys=keys;
