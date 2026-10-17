@@ -1,6 +1,7 @@
-# Dựng 2 bản lên GitHub Pages:
-#   /      ← nhánh main (bản chính thức)
+# Dựng 2 bản lên GitHub Pages (2 đường dẫn tách biệt, không lồng nhau):
+#   /app/  ← nhánh main (bản chính thức)
 #   /dev/  ← nhánh dev  (bản đang phát triển)
+#   /      ← trang chuyển hướng sang /app/ (thư mục site-root của main)
 name: Deploy Pages (chính thức + dev)
 
 on:
@@ -37,11 +38,12 @@ jobs:
 
       - name: Ghép 2 bản
         run: |
-          mkdir -p _site
-          rsync -a --exclude='.git' --exclude='.github' prod/ _site/
+          mkdir -p _site/app
+          cp -r prod/site-root/. _site/
+          rsync -a --exclude='.git' --exclude='.github' --exclude='site-root' prod/ _site/app/
           if [ -f devsrc/index.html ]; then
             mkdir -p _site/dev
-            rsync -a --exclude='.git' --exclude='.github' devsrc/ _site/dev/
+            rsync -a --exclude='.git' --exclude='.github' --exclude='site-root' devsrc/ _site/dev/
             cd _site/dev
             sed -i \
               -e 's#href="manifest.webmanifest"#href="manifest.dev.webmanifest"#' \
