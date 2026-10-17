@@ -510,7 +510,9 @@ tfoot td{font-weight:600;border-top:1px solid var(--line2);border-bottom:0}
 .stickyhead,.stickyhead .phead{min-width:0;max-width:100%}
 @media (max-width:700px){.stickyhead.stuck h1{font-size:21px}.stickyhead.stuck .phead{gap:8px}.stickyhead.stuck .actions{flex-wrap:nowrap;overflow-x:auto;width:100%;min-width:0;padding-bottom:2px}.stickyhead.stuck .actions .btn{min-height:32px;padding:5px 10px;font-size:13px}}
 @media (prefers-reduced-motion:no-preference){.stickyhead h1{transition:font-size .15s}}
-.devtag{align-self:center;margin-left:8px;padding:3px 7px;border-radius:6px;background:#E8692A;color:#fff;font-size:11px;font-weight:700;letter-spacing:.08em;line-height:1}
+.brand{position:relative}
+.devtag{position:absolute;bottom:-3px;right:0;padding:4px 7px;border-radius:6px;background:#E8692A;color:#fff;font:700 11px/1 var(--f-label,sans-serif);letter-spacing:.1em;font-style:normal}
+@media (max-width:980px){.devtag{left:81px;top:-3px;bottom:auto;right:auto;font-size:9px;padding:3px 4px;border-radius:4px;letter-spacing:.06em}}
 .totop{position:fixed;right:calc(20px + env(safe-area-inset-right,0px));bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:40;width:46px;height:46px;border-radius:50%;border:1px solid var(--line2);background:var(--bean);color:#F8F0D2;display:grid;place-items:center;cursor:pointer;box-shadow:0 6px 18px -6px #2E292680;font-size:20px;line-height:1}
 .totop:hover{background:#463f3b}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .totop{background:var(--cream);color:#2E2926}}
@@ -1696,7 +1698,7 @@ window.addEventListener('resize',()=>{clearTimeout(window._rz);window._rz=setTim
 
 /* ---------- boot ---------- */
 D=demoData();cur='2026-10';
-if(DEV){document.documentElement.classList.add('is-dev');document.querySelectorAll('.brand').forEach(b=>b.insertAdjacentHTML('beforeend','<span class="devtag" title="Bản đang phát triển – dùng để thử tính năng mới">DEV</span>'))}
+if(DEV){document.documentElement.classList.add('is-dev');document.querySelectorAll('.brand').forEach(b=>b.insertAdjacentHTML('beforeend','<i class="devtag" title="Bản đang phát triển – dùng để thử tính năng mới">DEV</i>'))}
 render();
 window.addEventListener('resize',()=>{clearTimeout(window._rz2);window._rz2=setTimeout(drawAuthBg,150)});
 (async()=>{
