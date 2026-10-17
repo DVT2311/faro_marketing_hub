@@ -2,11 +2,12 @@
    - Hiện thông báo hệ thống khi app chạy nền / đã thoát
    - Bấm thông báo: mở app đúng việc
    - Lưu bản sao trang để mở được khi mạng chập chờn */
-const CACHE = 'faro-v1';
+const CH = self.registration.scope.includes('/dev/') ? 'dev' : 'prod';
+const CACHE = 'faro-' + CH + '-v1';   // mỗi bản một bộ nhớ đệm riêng
 
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', e => e.waitUntil((async () => {
-  for (const k of await caches.keys()) if (k !== CACHE) await caches.delete(k);
+  for (const k of await caches.keys()) if (k.startsWith('faro-' + CH + '-') && k !== CACHE) await caches.delete(k);
   await self.clients.claim();
 })()));
 
