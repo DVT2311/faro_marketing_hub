@@ -510,6 +510,11 @@ tfoot td{font-weight:600;border-top:1px solid var(--line2);border-bottom:0}
 .stickyhead,.stickyhead .phead{min-width:0;max-width:100%}
 @media (max-width:700px){.stickyhead.stuck h1{font-size:21px}.stickyhead.stuck .phead{gap:8px}.stickyhead.stuck .actions{flex-wrap:nowrap;overflow-x:auto;width:100%;min-width:0;padding-bottom:2px}.stickyhead.stuck .actions .btn{min-height:32px;padding:5px 10px;font-size:13px}}
 @media (prefers-reduced-motion:no-preference){.stickyhead h1{transition:font-size .15s}}
+.picsel{display:flex;align-items:center;gap:8px;min-width:0}
+.picsel .select{min-height:44px;min-width:150px;max-width:220px}
+.picsel.on .select{border-color:var(--ink,#2E2926);box-shadow:inset 0 0 0 1px var(--ink,#2E2926)}
+.stickyhead.stuck .picsel .select{min-height:38px;min-width:130px}
+@media (max-width:700px){.phead .actions:has(.picsel){flex-wrap:nowrap;width:100%;min-width:0}.phead .actions:has(.picsel)>.btn{flex:none}.phead .actions .picsel{flex:1 1 auto}.phead .actions .picsel .select{min-width:0;width:100%;max-width:none}.stickyhead.stuck .actions:has(.picsel){overflow:visible}}
 .brand{position:relative}
 .devtag{position:absolute;bottom:-3px;right:0;padding:4px 7px;border-radius:6px;background:#E8692A;color:#fff;font:700 11px/1 var(--f-label,sans-serif);letter-spacing:.1em;font-style:normal}
 @media (max-width:980px){.devtag{left:81px;top:-3px;bottom:auto;right:auto;font-size:9px;padding:3px 4px;border-radius:4px;letter-spacing:.06em}}
@@ -1353,11 +1358,11 @@ function vExec(){
   const f=UI.fStatus;
   tasks=tasks.filter(t=>f==='all'||(f==='open'?t.status!=='done':f==='assigned'?t.status===f:tStatus(t).k===f));
   if(UI.fPic==='me')tasks=tasks.filter(t=>t.pic===me);else if(UI.fPic!=='all')tasks=tasks.filter(t=>t.pic===UI.fPic);
+  const picSel=`<div class="picsel${UI.fPic!=='all'?' on':''}"><label class="eyebrow" for="fPic">PIC</label><select class="select" id="fPic"><option value="all">Mọi người</option>${can('receive')||can('assign')?`<option value="me" ${UI.fPic==='me'?'selected':''}>Việc của tôi</option>`:''}${PEOPLE.map(p=>`<option ${UI.fPic===p?'selected':''}>${esc(p)}</option>`).join('')}</select></div>`;
   const b=(k,l)=>`<button data-fstatus="${k}" aria-pressed="${f===k}">${l}<b>${cnt[k]}</b></button>`;
   const groups=cs.map(c=>({c,ts:tasks.filter(t=>t.campaignId===c.id).sort((a,b)=>(a.deadline||'').localeCompare(b.deadline||''))})).filter(g=>g.ts.length||UI.camp!=='all');
-  return `${pageHead(monthLabel(cur),'Kế hoạch triển khai',add)}${lockNotice()}${scopeBar()}
-   <div class="filters"><div class="seg" role="group" aria-label="Lọc trạng thái">${b('open','Đang mở')}${b('late','Chậm')}${b('warn','Sắp hạn')}${b('assigned','Chờ nhận')}${b('done','Hoàn thành')}${b('all','Tất cả')}</div>
-    <div class="row"><label class="eyebrow" for="fPic">PIC</label><select class="select" id="fPic"><option value="all">Mọi người</option>${can('receive')||can('assign')?`<option value="me" ${UI.fPic==='me'?'selected':''}>Việc của tôi</option>`:''}${PEOPLE.map(p=>`<option ${UI.fPic===p?'selected':''}>${esc(p)}</option>`).join('')}</select></div></div>
+  return `${pageHead(monthLabel(cur),'Kế hoạch triển khai',add+picSel)}${lockNotice()}${scopeBar()}
+   <div class="filters"><div class="seg" role="group" aria-label="Lọc trạng thái">${b('open','Đang mở')}${b('late','Chậm')}${b('warn','Sắp hạn')}${b('assigned','Chờ nhận')}${b('done','Hoàn thành')}${b('all','Tất cả')}</div></div>
    <p class="hint" style="margin:-8px 0 0">Quy trình: BOD giao việc → nhân sự bấm Nhận việc → làm xong thì xác nhận hoàn thành kèm kết quả, hệ thống ghi nhận ngay. Chưa xác nhận thì trạng thái chạy theo deadline.</p>
    ${groups.length?groups.map(g=>`<section><div class="group-h"><span class="cdot" style="--c:${col(g.c)[0]}"></span><h3>${esc(g.c.name)}</h3><span class="muted">Lead ${esc(g.c.lead||'—')} · ${g.ts.length} việc</span></div>
      ${g.ts.length?`<div class="tlist">${g.ts.map(taskRow).join('')}</div>`:'<div class="empty">Chưa có đầu việc khớp bộ lọc.</div>'}</section>`).join(''):'<div class="empty">Không có đầu việc nào khớp bộ lọc.</div>'}`;
