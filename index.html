@@ -530,6 +530,7 @@ tfoot td{font-weight:600;border-top:1px solid var(--line2);border-bottom:0}
 @keyframes tFlash{0%,60%{box-shadow:0 0 0 3px var(--warn,#F7D464)}100%{box-shadow:0 0 0 0 transparent}}
 @keyframes bdBump{0%,100%{transform:scale(1)}40%{transform:scale(1.35)}}
 .nset{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 12px;border-radius:12px;background:var(--panel2,rgba(46,41,38,.05))}
+.bgcd{width:76px;height:76px;margin:4px auto 0;border-radius:50%;display:grid;place-items:center;font:600 34px/1 var(--serif,serif);background:var(--side,#F8F0D2);color:var(--ink,#2E2926)}
 .nset .lbl{font-size:13px;font-weight:600;margin-right:auto;display:flex;align-items:center;gap:6px}
 .nhead .ncount{font-size:12.5px;font-weight:600;padding:3px 9px;border-radius:20px;background:var(--sos,#D23B2B);color:#fff;margin-left:8px;vertical-align:middle}
 @media (prefers-reduced-motion:reduce){.nban,.nban.out,.bdot.bump{animation:none}.task.flash{animation:none;box-shadow:0 0 0 3px var(--warn,#F7D464)}}
@@ -1008,9 +1009,10 @@ function playDing(force){
 function openNotif(n){
   document.getElementById('modalRoot').innerHTML='';
   markRead(n);
-  if(n.go?.task){const t=D.tasks.find(x=>x.id===n.go.task);if(t){UI.open.add(t.id);UI.camp='all';UI.fStatus='all';if((t.deadline||'').slice(0,7)!==cur&&t.deadline)cur=t.deadline.slice(0,7)}}
+  let tid=null;
+  if(n.go?.task){const t=D.tasks.find(x=>x.id===n.go.task)||(n.go.title&&D.tasks.find(x=>x.title===n.go.title));if(t){tid=t.id;UI.open.add(t.id);UI.camp='all';UI.fStatus='all';if((t.deadline||'').slice(0,7)!==cur&&t.deadline)cur=t.deadline.slice(0,7)}}
   setTab(n.go?.tab||'plan');
-  if(n.go?.task)setTimeout(()=>{let r=document.querySelector(`.trow[data-id="${n.go.task}"]`);r=r&&(r.closest('.task')||r);if(r){const hd=[...document.querySelectorAll('.side,.stickyhead,.scope')].reduce((m,e)=>{const q=e.getBoundingClientRect();return getComputedStyle(e).position.match(/fixed|sticky/)&&q.top<200?Math.max(m,q.bottom):m},0);window.scrollTo({top:r.getBoundingClientRect().top+scrollY-Math.max(hd,60)-12,behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'});r.classList.add('flash');setTimeout(()=>r.classList.remove('flash'),1600)}},60);
+  if(tid)setTimeout(()=>{let r=document.querySelector(`.trow[data-id="${tid}"]`);r=r&&(r.closest('.task')||r);if(r){const hd=[...document.querySelectorAll('.side,.stickyhead,.scope')].reduce((m,e)=>{const q=e.getBoundingClientRect();return getComputedStyle(e).position.match(/fixed|sticky/)&&q.top<200?Math.max(m,q.bottom):m},0);window.scrollTo({top:r.getBoundingClientRect().top+scrollY-Math.max(hd,60)-12,behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'});r.classList.add('flash');setTimeout(()=>r.classList.remove('flash'),1600)}},60);
 }
 let banT=null;
 function hideBanner(){const b=document.querySelector('.nban');if(!b)return;clearTimeout(banT);if(matchMedia('(prefers-reduced-motion:reduce)').matches){b.remove();return}b.classList.add('out');setTimeout(()=>b.remove(),230)}
@@ -1029,6 +1031,7 @@ function sysNotify(n,more){
   try{
     if(!('Notification' in window)||Notification.permission!=='granted')return;
     const opt={body:(n.sub||'')+(more?` · và ${more} thông báo khác`:''),tag:'faro-'+n.key,icon:document.querySelector('link[rel="apple-touch-icon"]')?.href||undefined,badge:document.querySelector('link[rel="icon"][sizes="32x32"]')?.href||undefined,renotify:true};
+    if(SWR){SWR.showNotification(n.text,notifOpts(n,more)).catch(()=>{});return}
     const x=new Notification(n.text,opt);
     x.onclick=()=>{try{window.focus()}catch(_){}x.close();more?notifModal():openNotif(n)};
   }catch(_){}
@@ -1043,11 +1046,52 @@ function alertFresh(fresh){
   const d=document.getElementById('bellCnt');if(d){d.classList.remove('bump');void d.offsetWidth;d.classList.add('bump')}
 }
 let XN=[];/* demo: simulated notifications */
-function testNotif(){
-  const mine=D.tasks.filter(t=>t.pic===me&&t.status!=='done'),t=mine[0]||D.tasks.find(x=>x.status!=='done')||D.tasks[0];
+function makeTestNotif(delay){
+  const ts=Date.now()+(delay||0),mine=D.tasks.filter(t=>t.pic===me&&t.status!=='done'),t=mine[0]||D.tasks.find(x=>x.status!=='done')||D.tasks[0];
   const camp=t?campById(t.campaignId)?.name||'':'';
-  const n=t?{key:'test-'+Date.now(),ts:Date.now(),ic:'task',act:1,text:`Bạn được giao việc: ${t.title}`,sub:`${camp} · hạn ${fdate(t.deadline)} · thông báo thử`,go:{tab:'exec',task:t.id}}:{key:'test-'+Date.now(),ts:Date.now(),ic:'task',text:'Thông báo thử từ Faro Marketing Hub',sub:'Bấm để xem',go:{tab:'plan'}};
-  XN.push(n);updateBell();
+  return t?{key:'test-'+ts,ts,ic:'task',act:1,text:`Bạn được giao việc: ${t.title}`,sub:`${camp} · hạn ${fdate(t.deadline)} · thông báo thử`,go:{tab:'exec',task:t.id,title:t.title}}:{key:'test-'+ts,ts,ic:'task',text:'Thông báo thử từ Faro Marketing Hub',sub:'Bấm để xem',go:{tab:'plan'}};
+}
+function testNotif(){XN.push(makeTestNotif());updateBell()}
+/* ---- service worker: báo khi app chạy nền / đã thoát (cần bản https, vd GitHub Pages) ---- */
+const SW_CAN=('serviceWorker' in navigator)&&STANDALONE&&/^https?:$/.test(location.protocol);
+let SWR=null,PENDING_N=null;
+const absUrl=u=>new URL(u,location.href).href;
+const appUrl=()=>location.href.split('#')[0];
+function notifOpts(n,more){return{body:(n.sub||'')+(more?` · và ${more} thông báo khác`:''),tag:'faro-'+n.key,icon:absUrl('icons/icon-192.png'),badge:absUrl('icons/badge-96.png'),vibrate:[80,60,80],renotify:true,timestamp:n.ts,data:{url:appUrl()+'#n='+encodeURIComponent(JSON.stringify(n)),n}}}
+function takeIncoming(n,silent){
+  if(!n||!n.key)return;
+  if(!XN.some(x=>x.key===n.key))XN.push({...n});
+  if(silent&&lastKeys)lastKeys.add(n.key);
+  if(ME&&!ME.mustChange)updateBell();
+}
+function openIncoming(n){
+  if(!n||!n.key)return;
+  if(!XN.some(x=>x.key===n.key))XN.push({...n});
+  if(lastKeys)lastKeys.add(n.key);
+  if(ME&&!ME.mustChange)openNotif(n);else PENDING_N=n;
+}
+try{const m=location.hash.match(/^#n=(.+)$/);if(m){PENDING_N=JSON.parse(decodeURIComponent(m[1]));history.replaceState(null,'',appUrl())}}catch(_){}
+if(SW_CAN){
+  navigator.serviceWorker.register('sw.js').then(r=>{SWR=r}).catch(()=>{});
+  navigator.serviceWorker.addEventListener('message',e=>{const d=e.data||{};
+    if(d.type==='open-notif')openIncoming(d.n);
+    else if(d.type==='incoming')takeIncoming(d.n);
+    else if(d.type==='incoming-bg')takeIncoming(d.n,true)});
+}
+async function testBgNotif(sec){
+  if(!SWR){toast('Mục này chỉ thử được trên bản GitHub Pages.');return}
+  try{if(Notification.permission==='default')await Notification.requestPermission()}catch(_){}
+  if(!('Notification' in window)||Notification.permission!=='granted'){toast('Bạn cần cho phép thông báo cho trang này trong cài đặt trình duyệt.');notifModal();return}
+  const reg=await navigator.serviceWorker.ready,n=makeTestNotif(sec*1000);
+  const unread=notifs().filter(x=>!isRead(x)).length+1;
+  (reg.active||navigator.serviceWorker.controller).postMessage({type:'schedule',delay:sec*1000,n,title:n.text,opt:notifOpts(n),badge:unread});
+  bgCountdown(sec);
+}
+function bgCountdown(sec){
+  const root=document.getElementById('modalRoot');let left=sec;
+  root.innerHTML=`<div class="overlay" role="dialog" aria-modal="true" aria-label="Thử thông báo khi đóng app"><div class="modal" style="text-align:center"><div class="bgcd" aria-live="polite">${left}</div><h2 style="margin:0">Thoát app ngay</h2><p style="margin:0">Về màn hình chính hoặc khoá máy. Sau <b>${sec} giây</b> điện thoại sẽ hiện thông báo, bấm vào để mở đúng việc.</p><p class="hint" style="margin:0">iPhone: chỉ nhận được khi có máy chủ gửi thông báo (bản chính thức).</p><button class="btn ghost" data-close>Ở lại xem trong app</button></div></div>`;
+  const el=root.querySelector('.bgcd'),iv=setInterval(()=>{left--;if(!el.isConnected||left<=0){clearInterval(iv);if(el.isConnected)root.innerHTML='';return}el.textContent=left},1000);
+  root.querySelector('[data-close]').onclick=()=>{clearInterval(iv);root.innerHTML=''};
 }
 let lastKeys=null;
 function updateBell(){
@@ -1067,8 +1111,8 @@ function notifModal(){
   const ago=ts=>{if(!ts)return '';const m=Math.round((Date.now()-ts)/6e4);if(m<1)return 'vừa xong';if(m<60)return m+' phút trước';const h=Math.round(m/60);if(h<24)return h+' giờ trước';const d=Math.round(h/24);return d<0?'sắp tới':d+' ngày trước'};
   root.innerHTML=`<div class="overlay" role="dialog" aria-modal="true" aria-label="Thông báo"><div class="modal"><div class="nhead"><h2>Thông báo${unreadN?`<span class="ncount">${unreadN} mới</span>`:''}</h2><button class="btn sm ghost" data-close>Đóng</button></div>
    ${list.length?`<div class="nlist">${list.map((n,i)=>`<button class="nitem ${!isRead(n)?'unread':''} ${n.act?'act':''}" data-ni="${i}"><span class="nic"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${NIC[n.ic]||''}</svg></span><span><span class="nt">${esc(n.text)}</span><div class="ns">${esc(n.sub||'')}${n.ts&&n.ts<=Date.now()?' · '+ago(n.ts):''}</div></span></button>`).join('')}</div>`:'<div class="empty">Chưa có thông báo nào.</div>'}
-   <div class="nset"><span class="lbl"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"/>${sndOn()?'<path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/>':'<path d="m16 9 5 6m0-6-5 6"/>'}</svg>Âm báo ${sndOn()?'đang bật':'đang tắt'}</span><button class="btn sm ghost" data-n="snd">${sndOn()?'Tắt âm':'Bật âm'}</button><button class="btn sm ghost" data-n="hear">Nghe thử</button><button class="btn sm" data-n="test">Thử thông báo</button>${perm==='default'?'<button class="btn sm ghost" data-n="perm">Cho phép báo khi app chạy nền</button>':''}</div>
-   <p class="hint" style="margin:0">Bấm vào thông báo để mở đúng việc. Mục nền vàng là việc cần bạn xử lý.${perm==='denied'?' Trình duyệt đang chặn thông báo nền — bật lại trong cài đặt trang.':''}</p></div></div>`;
+   <div class="nset"><span class="lbl"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"/>${sndOn()?'<path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/>':'<path d="m16 9 5 6m0-6-5 6"/>'}</svg>Âm báo ${sndOn()?'đang bật':'đang tắt'}</span><button class="btn sm ghost" data-n="snd">${sndOn()?'Tắt âm':'Bật âm'}</button><button class="btn sm ghost" data-n="hear">Nghe thử</button><button class="btn sm" data-n="test">Thử thông báo</button>${SW_CAN?'<button class="btn sm" data-n="bg">Thử khi đóng app</button>':''}${perm==='default'?'<button class="btn sm ghost" data-n="perm">Cho phép báo khi app chạy nền</button>':''}</div>
+   <p class="hint" style="margin:0">Bấm vào thông báo để mở đúng việc. Mục nền vàng là việc cần bạn xử lý.${SW_CAN?'':' Muốn thử thông báo khi đã thoát app: mở bản GitHub Pages trên điện thoại.'}${perm==='denied'?' Trình duyệt đang chặn thông báo nền — bật lại trong cài đặt trang.':''}</p></div></div>`;
   root.querySelector('[data-close]').onclick=()=>root.innerHTML='';
   root.querySelector('.overlay').addEventListener('mousedown',e=>{if(e.target.classList.contains('overlay'))root.innerHTML=''});
   root.querySelectorAll('[data-ni]').forEach(b=>b.onclick=()=>openNotif(list[+b.dataset.ni]));
@@ -1076,6 +1120,7 @@ function notifModal(){
   nb('snd').onclick=()=>{sndSet(!sndOn());if(sndOn()){unlockAudio();playDing(1)}notifModal()};
   nb('hear').onclick=()=>{unlockAudio();setTimeout(()=>playDing(1),abuf?0:120)};
   nb('test').onclick=()=>{unlockAudio();root.innerHTML='';toast('Thông báo thử sẽ đến sau 2 giây…');setTimeout(testNotif,2000)};
+  nb('bg')&&(nb('bg').onclick=()=>{unlockAudio();testBgNotif(10)});
   nb('perm')&&(nb('perm').onclick=()=>{try{Notification.requestPermission().then(()=>notifModal())}catch(_){}});
   if(unreadN){const o={...ME,notifSeen:Date.now(),notifRead:[]};ME=o;put('accounts',o.id,o)}
 }
@@ -1104,6 +1149,7 @@ function render(){
   pinHeader();
   scopeIntoView();
   updateBell();
+  if(PENDING_N&&ME&&!ME.mustChange){const n=PENDING_N;PENDING_N=null;setTimeout(()=>openIncoming(n),0)}
   document.getElementById('mAv').innerHTML=av(me,'lead');
   document.documentElement.style.setProperty('--appbar',(document.querySelector('.side').getBoundingClientRect().height||56)+'px');
 }
