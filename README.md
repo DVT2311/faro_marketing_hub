@@ -29,7 +29,7 @@ Một ứng dụng web dùng được trên máy tính, tablet và điện tho�
 
 ## Xem bản demo
 
-Mở `index.html` bằng trình duyệt (hoặc qua GitHub Pages nếu đã bật). Bản demo chạy với dữ liệu mẫu, thay đổi không được lưu lại.
+Mở https://dvt2311.github.io/faro_marketing_hub/ (hoặc mở `index.html` bằng trình duyệt). Bản demo chạy với dữ liệu mẫu, thay đổi không được lưu lại.
 
 | Vai trò | Tên đăng nhập | Mật khẩu |
 |---|---|---|
@@ -44,10 +44,10 @@ Mở `index.html` bằng trình duyệt (hoặc qua GitHub Pages nếu đã bậ
 
 | Bản | Link | Nhánh | Dùng để |
 |---|---|---|---|
-| **Chính thức** | https://dvt2311.github.io/faro_marketing_hub/ | `main` | Bản team đang dùng |
+| **Chính thức** | https://dvt2311.github.io/faro_marketing_hub/ (tự chuyển tới `/app/`) | `main` | Bản team đang dùng |
 | **Dev** | https://dvt2311.github.io/faro_marketing_hub/dev/ | `dev` | Thử tính năng mới trước khi đưa vào bản chính thức |
 
-Hai bản cài được song song trên cùng một điện thoại (bản Dev có icon dải cam chữ **DEV**). Tính năng mới được đưa lên `dev` trước; khi duyệt xong mới gộp vào `main`.
+Hai bản nằm ở hai đường dẫn tách biệt (`/app/` và `/dev/`) nên cài được song song trên cùng một điện thoại (bản Dev có icon dải cam chữ **DEV**). Tính năng mới được đưa lên `dev` trước; khi duyệt xong mới gộp vào `main`.
 
 ## Lộ trình
 

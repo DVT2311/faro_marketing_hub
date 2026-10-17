@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Faro Marketing Hub</title>
+<meta name="theme-color" content="#F8F0D2">
+<link rel="icon" type="image/svg+xml" href="app/icons/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="app/icons/favicon-32.png">
+<style>
+  :root{--bg:#F8F0D2;--ink:#2E2926;--mut:#6b625c}
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;padding:24px}
+  .card{max-width:420px;text-align:center}
+  img{width:88px;height:88px;border-radius:20px}
+  h1{font-size:22px;margin:16px 0 8px}
+  p{margin:0 0 12px;color:var(--mut)}
+  ol{text-align:left;color:var(--mut);padding-left:20px;margin:0 0 16px}
+  a.btn{display:inline-block;margin-top:4px;padding:12px 20px;border-radius:10px;background:var(--ink);color:var(--bg);text-decoration:none;font-weight:600}
+  .old{display:none}
+  .is-old .old{display:block}.is-old .go{display:none}
+</style>
+<script>
+  /* Bản chính thức đã chuyển sang /app/. Mở trên trình duyệt: tự chuyển.
+     Mở từ icon cũ đã cài: báo cần cài lại (để không lẫn thông báo với bản Dev). */
+  (function(){
+    var standalone = (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone;
+    if (!standalone) { location.replace('app/' + location.search + location.hash); return; }
+    document.documentElement.className = 'is-old';
+  })();
+</script>
+</head>
+<body>
+  <div class="card">
+    <img src="app/icons/apple-touch-icon.png" alt="">
+    <div class="go"><h1>Đang mở Faro Marketing Hub…</h1><p><a class="btn" href="app/">Mở ứng dụng</a></p></div>
+    <div class="old">
+      <h1>Ứng dụng đã chuyển địa chỉ</h1>
+      <p>Icon này là bản cũ. Vui lòng cài lại để nhận thông báo đúng:</p>
+      <ol>
+        <li>Xoá icon <b>Faro MKT</b> cũ khỏi màn hình chính.</li>
+        <li>Mở <b>dvt2311.github.io/faro_marketing_hub</b> bằng Safari (iPhone) hoặc Chrome (Android).</li>
+        <li>Thêm vào màn hình chính / Cài đặt ứng dụng.</li>
+      </ol>
+      <a class="btn" href="app/">Tạm mở bản mới</a>
+    </div>
+  </div>
+</body>
+</html>
