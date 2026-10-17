@@ -40,6 +40,15 @@ Mở `index.html` bằng trình duyệt (hoặc qua GitHub Pages nếu đã bậ
 
 > Bản công khai dùng font thay thế miễn phí (Barlow, Barlow Semi Condensed, Bitter – giấy phép SIL Open Font License), đã chỉnh độ đậm để hiển thị gần giống font thương hiệu. Font thương hiệu (TT Norms Pro Serif, URW DIN) không được đính kèm vì giấy phép không cho phép phân phối trên web.
 
+## Hai phiên bản
+
+| Bản | Link | Nhánh | Dùng để |
+|---|---|---|---|
+| **Chính thức** | https://dvt2311.github.io/faro_marketing_hub/ | `main` | Bản team đang dùng |
+| **Dev** | https://dvt2311.github.io/faro_marketing_hub/dev/ | `dev` | Thử tính năng mới trước khi đưa vào bản chính thức |
+
+Hai bản cài được song song trên cùng một điện thoại (bản Dev có icon dải cam chữ **DEV**). Tính năng mới được đưa lên `dev` trước; khi duyệt xong mới gộp vào `main`.
+
 ## Lộ trình
 
 Bản hiện tại là bản demo để BOD và team dùng thử, góp ý. Bước tiếp theo là xây bản chính thức có cơ sở dữ liệu riêng của công ty, đăng nhập theo tài khoản nội bộ, thông báo đẩy về điện thoại và báo cáo theo mẫu KPI của phòng.

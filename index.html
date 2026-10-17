@@ -510,6 +510,7 @@ tfoot td{font-weight:600;border-top:1px solid var(--line2);border-bottom:0}
 .stickyhead,.stickyhead .phead{min-width:0;max-width:100%}
 @media (max-width:700px){.stickyhead.stuck h1{font-size:21px}.stickyhead.stuck .phead{gap:8px}.stickyhead.stuck .actions{flex-wrap:nowrap;overflow-x:auto;width:100%;min-width:0;padding-bottom:2px}.stickyhead.stuck .actions .btn{min-height:32px;padding:5px 10px;font-size:13px}}
 @media (prefers-reduced-motion:no-preference){.stickyhead h1{transition:font-size .15s}}
+.devtag{align-self:center;margin-left:8px;padding:3px 7px;border-radius:6px;background:#E8692A;color:#fff;font-size:11px;font-weight:700;letter-spacing:.08em;line-height:1}
 /* in-app notification banner */
 .nban{position:fixed;left:50%;top:calc(10px + env(safe-area-inset-top,0px));transform:translateX(-50%);z-index:80;width:min(440px,calc(100% - 20px));display:flex;align-items:center;gap:12px;padding:12px 10px 12px 14px;background:#2E2926;color:#F8F0D2;border-radius:14px;box-shadow:0 10px 30px rgba(46,41,38,.28);animation:nbanIn .32s cubic-bezier(.2,.9,.3,1.2)}
 .nban.out{animation:nbanOut .22s ease-in forwards}
@@ -748,7 +749,8 @@ const genTempPw=()=>'faro-'+randStr(4)+'-'+randStr(4);
 async function setPw(acc,pw){const salt=randStr(16);return{...acc,salt,hash:await hashPw(pw,salt),demoPw:''}}
 async function checkPw(acc,pw){if(acc.demoPw)return pw===acc.demoPw;return !!acc.hash&&(await hashPw(pw,acc.salt||''))===acc.hash}
 const findUser=u=>{const k=String(u||'').trim().toLowerCase(),k2=k.replace(/@/g,'.');return D.accounts.find(a=>a.username===k)||D.accounts.find(a=>a.username===k2||(a.email&&a.email.toLowerCase()===k))};
-const sessKey=()=>'faro_sess_'+MODE;
+const DEV=/\/dev\//.test(location.pathname),APPN=DEV?'Faro MKT Dev':'Faro Marketing Hub';
+const sessKey=()=>'faro_sess_'+MODE+(DEV?'_dev':'');
 function saveSess(acc){try{localStorage.setItem(sessKey(),JSON.stringify({id:acc.id,v:acc.sessVer||0}))}catch(e){}}
 function clearSess(){try{localStorage.removeItem(sessKey())}catch(e){}}
 function restoreSess(){if(ME)return;let s=null;try{s=JSON.parse(localStorage.getItem(sessKey())||'null')}catch(e){}if(!s)return;const a=D.accounts.find(x=>x.id===s.id);if(a&&a.active!==false&&(a.sessVer||0)===s.v)setMe(a,true)}
@@ -1098,7 +1100,7 @@ function updateBell(){
   const list=notifs(),unread=list.filter(n=>!isRead(n)).length,el=document.getElementById('bellCnt');
   el.hidden=!unread;el.textContent=unread>9?'9+':unread;
   document.querySelector('.bellbtn')?.setAttribute('aria-label',unread?`Thông báo, ${unread} mới`:'Thông báo');
-  document.title=(unread?`(${unread}) `:'')+'Faro Marketing Hub';
+  document.title=(unread?`(${unread}) `:'')+APPN;
   setIconBadge(unread);
   const keys=new Set(list.map(n=>n.key));
   if(lastKeys){const fresh=list.filter(n=>!lastKeys.has(n.key)&&!isRead(n)&&n.ts>Date.now()-6e5);if(fresh.length)alertFresh(fresh)}
@@ -1838,7 +1840,9 @@ let tt;function toast(m){let el=document.querySelector('.toast');if(!el){el=docu
 window.addEventListener('resize',()=>{clearTimeout(window._rz);window._rz=setTimeout(drawHero,150)});
 
 /* ---------- boot ---------- */
-D=demoData();cur='2026-10';render();
+D=demoData();cur='2026-10';
+if(DEV){document.documentElement.classList.add('is-dev');document.querySelectorAll('.brand').forEach(b=>b.insertAdjacentHTML('beforeend','<span class="devtag" title="Bản đang phát triển – dùng để thử tính năng mới">DEV</span>'))}
+render();
 window.addEventListener('resize',()=>{clearTimeout(window._rz2);window._rz2=setTimeout(drawAuthBg,150)});
 (async()=>{
   db=await (window.claude?.use?.('db')??Promise.resolve(null)).catch(()=>null);

@@ -1,0 +1,70 @@
+# Dựng 2 bản lên GitHub Pages:
+#   /      ← nhánh main (bản chính thức)
+#   /dev/  ← nhánh dev  (bản đang phát triển)
+name: Deploy Pages (chính thức + dev)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Lấy bản chính thức (main)
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: prod
+
+      - name: Lấy bản dev
+        id: dev
+        continue-on-error: true
+        uses: actions/checkout@v4
+        with:
+          ref: dev
+          path: devsrc
+
+      - name: Ghép 2 bản
+        run: |
+          mkdir -p _site
+          rsync -a --exclude='.git' --exclude='.github' prod/ _site/
+          if [ -f devsrc/index.html ]; then
+            mkdir -p _site/dev
+            rsync -a --exclude='.git' --exclude='.github' devsrc/ _site/dev/
+            cd _site/dev
+            sed -i \
+              -e 's#href="manifest.webmanifest"#href="manifest.dev.webmanifest"#' \
+              -e 's#icons/#icons/dev/#g' \
+              -e 's#<title>Faro Marketing Hub</title>#<title>Faro MKT Dev</title>#' \
+              -e 's#name="apple-mobile-web-app-title" content="Faro MKT"#name="apple-mobile-web-app-title" content="Faro MKT Dev"#' \
+              -e 's#name="application-name" content="Faro Marketing Hub"#name="application-name" content="Faro MKT Dev"#' \
+              index.html
+            if [ -f sw.js ]; then sed -i 's#icons/#icons/dev/#g' sw.js; fi
+          fi
+          touch "$GITHUB_WORKSPACE/_site/.nojekyll"
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
