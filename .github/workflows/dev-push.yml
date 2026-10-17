@@ -1,0 +1,17 @@
+# Khi nhánh dev có thay đổi → chạy lại bước dựng Pages (chạy từ main)
+name: Cập nhật bản dev
+
+on:
+  push:
+    branches: [dev]
+
+permissions:
+  actions: write
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - run: gh workflow run pages.yml --ref main -R "$GITHUB_REPOSITORY"
+        env:
+          GH_TOKEN: ${{ github.token }}

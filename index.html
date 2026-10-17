@@ -510,6 +510,7 @@ tfoot td{font-weight:600;border-top:1px solid var(--line2);border-bottom:0}
 .stickyhead,.stickyhead .phead{min-width:0;max-width:100%}
 @media (max-width:700px){.stickyhead.stuck h1{font-size:21px}.stickyhead.stuck .phead{gap:8px}.stickyhead.stuck .actions{flex-wrap:nowrap;overflow-x:auto;width:100%;min-width:0;padding-bottom:2px}.stickyhead.stuck .actions .btn{min-height:32px;padding:5px 10px;font-size:13px}}
 @media (prefers-reduced-motion:no-preference){.stickyhead h1{transition:font-size .15s}}
+.devtag{align-self:center;margin-left:8px;padding:3px 7px;border-radius:6px;background:#E8692A;color:#fff;font-size:11px;font-weight:700;letter-spacing:.08em;line-height:1}
 .totop{position:fixed;right:calc(20px + env(safe-area-inset-right,0px));bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:40;width:46px;height:46px;border-radius:50%;border:1px solid var(--line2);background:var(--bean);color:#F8F0D2;display:grid;place-items:center;cursor:pointer;box-shadow:0 6px 18px -6px #2E292680;font-size:20px;line-height:1}
 .totop:hover{background:#463f3b}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .totop{background:var(--cream);color:#2E2926}}
@@ -723,7 +724,8 @@ const genTempPw=()=>'faro-'+randStr(4)+'-'+randStr(4);
 async function setPw(acc,pw){const salt=randStr(16);return{...acc,salt,hash:await hashPw(pw,salt),demoPw:''}}
 async function checkPw(acc,pw){if(acc.demoPw)return pw===acc.demoPw;return !!acc.hash&&(await hashPw(pw,acc.salt||''))===acc.hash}
 const findUser=u=>{const k=String(u||'').trim().toLowerCase(),k2=k.replace(/@/g,'.');return D.accounts.find(a=>a.username===k)||D.accounts.find(a=>a.username===k2||(a.email&&a.email.toLowerCase()===k))};
-const sessKey=()=>'faro_sess_'+MODE;
+const DEV=/\/dev\//.test(location.pathname),APPN=DEV?'Faro MKT Dev':'Faro Marketing Hub';
+const sessKey=()=>'faro_sess_'+MODE+(DEV?'_dev':'');
 function saveSess(acc){try{localStorage.setItem(sessKey(),JSON.stringify({id:acc.id,v:acc.sessVer||0}))}catch(e){}}
 function clearSess(){try{localStorage.removeItem(sessKey())}catch(e){}}
 function restoreSess(){if(ME)return;let s=null;try{s=JSON.parse(localStorage.getItem(sessKey())||'null')}catch(e){}if(!s)return;const a=D.accounts.find(x=>x.id===s.id);if(a&&a.active!==false&&(a.sessVer||0)===s.v)setMe(a,true)}
@@ -963,7 +965,7 @@ let lastKeys=null;
 function updateBell(){
   const list=notifs(),unread=list.filter(n=>n.ts>seenAt()).length,el=document.getElementById('bellCnt');
   el.hidden=!unread;el.textContent=unread>9?'9+':unread;
-  document.title=(unread?`(${unread}) `:'')+'Faro Marketing Hub';
+  document.title=(unread?`(${unread}) `:'')+APPN;
   const keys=new Set(list.map(n=>n.key));
   if(lastKeys){const fresh=list.filter(n=>!lastKeys.has(n.key)&&n.ts>seenAt()&&n.ts>Date.now()-6e5);if(fresh.length)toast('🔔 '+fresh[0].text+(fresh.length>1?` (+${fresh.length-1})`:''))}
   lastKeys=keys;
@@ -1693,7 +1695,9 @@ let tt;function toast(m){let el=document.querySelector('.toast');if(!el){el=docu
 window.addEventListener('resize',()=>{clearTimeout(window._rz);window._rz=setTimeout(drawHero,150)});
 
 /* ---------- boot ---------- */
-D=demoData();cur='2026-10';render();
+D=demoData();cur='2026-10';
+if(DEV){document.documentElement.classList.add('is-dev');document.querySelectorAll('.brand').forEach(b=>b.insertAdjacentHTML('beforeend','<span class="devtag" title="Bản đang phát triển – dùng để thử tính năng mới">DEV</span>'))}
+render();
 window.addEventListener('resize',()=>{clearTimeout(window._rz2);window._rz2=setTimeout(drawAuthBg,150)});
 (async()=>{
   db=await (window.claude?.use?.('db')??Promise.resolve(null)).catch(()=>null);

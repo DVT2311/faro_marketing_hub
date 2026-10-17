@@ -24,5 +24,7 @@
       "purpose": "maskable"
     }
   ],
-  "start_url": "./"
+  "start_url": "./",
+  "id": "./",
+  "scope": "./"
 }
