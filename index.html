@@ -1700,6 +1700,8 @@ window.addEventListener('resize',()=>{clearTimeout(window._rz);window._rz=setTim
 D=demoData();cur='2026-10';
 if(DEV){document.documentElement.classList.add('is-dev');document.querySelectorAll('.brand').forEach(b=>b.insertAdjacentHTML('beforeend','<i class="devtag" title="Bản đang phát triển – dùng để thử tính năng mới">DEV</i>'))}
 render();
+/* service worker: cài ra màn hình chính ổn định + mở được khi mạng yếu (chỉ khi chạy trên web https) */
+if('serviceWorker' in navigator&&STANDALONE&&/^https?:$/.test(location.protocol))navigator.serviceWorker.register('sw.js').catch(()=>{});
 window.addEventListener('resize',()=>{clearTimeout(window._rz2);window._rz2=setTimeout(drawAuthBg,150)});
 (async()=>{
   db=await (window.claude?.use?.('db')??Promise.resolve(null)).catch(()=>null);
